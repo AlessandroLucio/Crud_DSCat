@@ -1,7 +1,7 @@
 package com.alelucio.dscatalog.services;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alelucio.dscatalog.dto.CategoryDTO;
 import com.alelucio.dscatalog.entities.Category;
 import com.alelucio.dscatalog.repositories.CategoryRepository;
+import com.alelucio.dscatalog.services.exceptions.EntityNotFoundException;
 
 @Service
 public class CategoryService {
@@ -20,8 +21,13 @@ public class CategoryService {
 	
 	@Transactional(readOnly = true)
 	public List<CategoryDTO> findAll(){
-		List<Category> list = repository.findAll();
-		
+		List<Category> list = repository.findAll();		
 		return list.stream().map(x -> new CategoryDTO(x)).collect(Collectors.toList());
+	}
+	@Transactional(readOnly = true)
+	public CategoryDTO findById(Long id){
+		Optional<Category> obj = repository.findById(id);//Optional é para evitar trabalhar com valor nulo
+		Category entity = obj.orElseThrow(() -> new EntityNotFoundException("Id não encontrado"));
+		return new CategoryDTO(entity);
 	}
 }
