@@ -1,3 +1,5 @@
+//arquivo importado diretamento no eclipse
+
 package com.alelucio.dscatalog.dto;
 
 import java.io.Serializable;
